@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Finantrix — Secretária Virtual</title>
+  <meta name="theme-color" content="#010812">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- fundo animado -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- Inicialização -->
+  <div id="boot" class="boot">
+    <div class="boot-core">
+      <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+      <svg class="boot-mark" viewBox="0 0 2420 2723"><path id="boot-path" fill="none" stroke="#FFEE32" stroke-width="40"/></svg>
+    </div>
+    <img class="boot-logo" src="assets/img/logo-dark.svg" alt="Finantrix">
+    <div class="boot-bar"><span></span></div>
+    <div class="boot-log mono" id="boot-log"></div>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <aside class="sidebar">
+      <a class="brand" href="#/painel"><img src="assets/img/logo-dark.svg" alt="Finantrix"></a>
+      <nav class="nav" id="nav">
+        <a href="#/painel" data-route="painel"><span data-icon="grid"></span><b>Painel</b></a>
+        <a href="#/agenda" data-route="agenda"><span data-icon="calendar"></span><b>Agenda</b></a>
+        <a href="#/financas" data-route="financas"><span data-icon="wallet"></span><b>Finanças</b></a>
+        <a href="#/secretaria" data-route="secretaria"><span data-icon="spark"></span><b>Secretária IA</b></a>
+        <a href="#/config" data-route="config"><span data-icon="gear"></span><b>Configurações</b></a>
+      </nav>
+      <div class="ai-status" id="ai-status">
+        <div class="ai-orb"><i></i><i></i><i></i></div>
+        <div><small class="mono">NÚCLEO IA</small><strong id="ai-mode">Online · local</strong></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="tb-left">
+          <h1 id="view-title">Painel</h1>
+          <span class="mono tb-clock" id="clock"></span>
+        </div>
+        <div class="tb-right">
+          <button class="icon-btn" id="btn-add" title="Adicionar" aria-label="Adicionar"><span data-icon="plus"></span></button>
+          <button class="icon-btn" id="btn-bell" title="Notificações" aria-label="Notificações"><span data-icon="bell"></span><em class="badge" id="bell-badge" hidden>0</em></button>
+        </div>
+      </header>
+      <section id="view" class="view" tabindex="-1"></section>
+    </main>
+
+    <nav class="bottom-nav" id="bottom-nav">
+      <a href="#/painel" data-route="painel"><span data-icon="grid"></span><b>Painel</b></a>
+      <a href="#/agenda" data-route="agenda"><span data-icon="calendar"></span><b>Agenda</b></a>
+      <a href="#/secretaria" data-route="secretaria" class="bn-ai"><span data-icon="spark"></span><b>IA</b></a>
+      <a href="#/financas" data-route="financas"><span data-icon="wallet"></span><b>Finanças</b></a>
+      <a href="#/config" data-route="config"><span data-icon="gear"></span><b>Ajustes</b></a>
+    </nav>
+  </div>
+
+  <!-- Orb de voz flutuante -->
+  <button class="voice-fab" id="voice-fab" title="Falar com a secretária" aria-label="Falar com a secretária" hidden>
+    <span class="vf-ring"></span><span class="vf-ring r2"></span><span data-icon="mic"></span>
+  </button>
+
+  <!-- Overlay "IA processando" -->
+  <div class="ai-overlay" id="ai-overlay" hidden>
+    <div class="ai-scan"></div>
+    <div class="ai-box">
+      <div class="ai-core-sm">
+        <div class="orbit o1"></div><div class="orbit o2"></div>
+        <img src="assets/img/mark.svg" alt="">
+      </div>
+      <div class="ai-lines">
+        <strong id="ai-ov-title">IA Finantrix processando</strong>
+        <div class="mono" id="ai-ov-step">Inicializando…</div>
+        <div class="ai-progress"><span id="ai-ov-bar"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Captura de voz -->
+  <div class="voice-ov" id="voice-ov" hidden>
+    <div class="voice-card">
+      <button class="icon-btn vo-close" id="vo-close" aria-label="Fechar"><span data-icon="x"></span></button>
+      <small class="mono" id="vo-status">OUVINDO…</small>
+      <canvas id="vo-wave" width="560" height="140"></canvas>
+      <p class="vo-text" id="vo-text">Fale naturalmente. Ex.: “Amanhã tenho médico às 14h” ou “Conta de luz todo dia 15, 180 reais”.</p>
+      <div class="vo-actions">
+        <button class="btn ghost" id="vo-cancel">Cancelar</button>
+        <button class="btn primary" id="vo-done"><span data-icon="check"></span> Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer" hidden>
+    <header><h3>Central de alertas</h3><button class="icon-btn" id="drawer-close" aria-label="Fechar"><span data-icon="x"></span></button></header>
+    <div id="drawer-body"></div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div id="modal-root"></div>
+  <div class="toasts" id="toasts"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
