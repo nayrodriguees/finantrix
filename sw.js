@@ -1,6 +1,6 @@
 // Finantrix — service worker: cache offline + ações das notificações.
-const CACHE = 'finantrix-v3';
-const ASSETS = ['./', './index.html', './css/styles.css', './js/app.js', './js/core.js', './js/db.js', './js/parser.js', './js/notify.js', './js/ai.js', './js/icons.js', './js/mark-path.js',
+const CACHE = 'finantrix-v5';
+const ASSETS = ['./', './index.html', './css/styles.css', './js/app.js', './js/core.js', './js/db.js', './js/parser.js', './js/notify.js', './js/ai.js', './js/telegram.js', './js/icons.js', './js/mark-path.js',
   './assets/img/logo-dark.svg', './assets/img/mark.svg', './assets/img/icon-192.png', './assets/img/favicon.png',
   './assets/fonts/Neusharp-Regular.woff2', './assets/fonts/Neusharp-Medium.woff2', './assets/fonts/Neusharp-Bold.woff2', './assets/fonts/Neusharp-Black.woff2', './assets/fonts/Neusharp-Light.woff2', './assets/fonts/Neusharp-SemiBold.woff2'];
 
