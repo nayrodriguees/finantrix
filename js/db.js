@@ -62,7 +62,7 @@ export const db = {
     const [items, files, kv] = await Promise.all([this.all('items'), this.all('files'), this.all('kv')]);
     const enc = buf => { let s = ''; const b = new Uint8Array(buf); for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); };
     return JSON.stringify({ app: 'finantrix', version: 1, exportedAt: new Date().toISOString(),
-      items, kv: kv.filter(x => x.k !== 'apiKey'),
+      items, kv: kv.filter(x => x.k !== 'apiKey').map(x => x.k === 'settings' ? { k: x.k, v: { ...x.v, apiKey: '' } } : x),
       files: files.map(f => ({ ...f, data: enc(f.data) })) });
   },
   async importAll(json) {
@@ -71,6 +71,9 @@ export const db = {
     const dec = s => { const bin = atob(s); const b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b.buffer; };
     for (const it of d.items || []) await this.put('items', it);
     for (const f of d.files || []) await this.put('files', { ...f, data: dec(f.data) });
-    for (const k of d.kv || []) await this.put('kv', k);
+    for (const k of d.kv || []) {
+      if (k.k === 'settings') { const cur = (await this.get('kv', 'settings'))?.v || {}; k.v = { ...k.v, apiKey: cur.apiKey || k.v.apiKey || '' }; }
+      await this.put('kv', k);
+    }
   }
 };

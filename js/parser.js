@@ -179,9 +179,24 @@ function cleanTitle(original, used) {
   return out ? out.charAt(0).toUpperCase() + out.slice(1) : '';
 }
 
+const WHEN_RE = /\b(hoje|amanha|depois de amanha|dia \d{1,2}|\d{1,2}\/\d{1,2}|\d{1,2} ?(h|horas?)\b|as \d{1,2}|\d{1,2}:\d{2}|segunda|terca|quarta|quinta|sexta|sabado|domingo|todo (dia|mes)|toda (semana|segunda|terca|quarta|quinta|sexta)|semana que vem|mes que vem)/;
 function splitSentences(text) {
-  return text.split(/(?:(?<!\d)[.;]+(?!\d)\s*|\n+|\s+e tambem\s+|\s+tambem\s+(?=(?:tenho|preciso|anota|lembra|marca|coloca)\b)|\s+e depois\s+|\s+alem disso\s+)/i)
-             .map(s => s.trim()).filter(s => s.length > 2);
+  const parts = text.split(/(?:(?<!\d)[.;]+(?!\d)\s*|\n+|\s+e tambem\s+|\s+tambem\s+(?=(?:tenho|preciso|anota|lembra|marca|coloca)\b)|\s+e depois\s+|\s+alem disso\s+)/i)
+                    .map(s => s.trim()).filter(s => s.length > 2);
+  // "dentista amanhã às 9h e projeto sexta às 10h": separa no "e" quando cada lado tem sua própria data/hora
+  const out = [];
+  for (const p of parts) {
+    const segs = p.split(/\s+e\s+/i);
+    let cur = segs[0];
+    for (let i = 1; i < segs.length; i++) {
+      const rest = segs.slice(i).join(' e ');
+      if (WHEN_RE.test(digitize(norm(cur))) && WHEN_RE.test(digitize(norm(segs[i])))) { out.push(cur); cur = segs[i]; }
+      else cur += ' e ' + segs[i];
+      void rest;
+    }
+    out.push(cur);
+  }
+  return out;
 }
 
 export function parseOne(raw) {

@@ -83,7 +83,9 @@ export function occurrences(item, from, to) {
     if (end && d > end) return;
     const date = iso(d);
     if (item.skips && item.skips.includes(date)) return;
-    out.push({ item, date, key: item.recurrence ? date : 'once' });
+    // Alterações feitas só neste dia (título, horário, observações) por cima da série
+    const ov = item.recurrence && item.overrides && item.overrides[date];
+    out.push({ item: ov ? { ...item, ...ov, __base: item } : item, date, key: item.recurrence ? date : 'once', edited: !!ov });
   };
   const r = item.recurrence;
   if (!r) { if (item.date) push(parseISO(item.date)); return out; }
@@ -105,6 +107,9 @@ export function occurrences(item, from, to) {
 export function allOccurrences(items, from, to) {
   return items.flatMap(it => occurrences(it, from, to)).sort((a, b) => (a.date + (a.item.time || '99')).localeCompare(b.date + (b.item.time || '99')));
 }
+
+// Item original (série) por trás de uma ocorrência com alteração só daquele dia.
+export const baseOf = it => (it && it.__base) || it;
 
 export const isDone = occ => {
   const it = occ.item;
